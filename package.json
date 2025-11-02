@@ -1,0 +1,22 @@
+{
+  "name": "kitsuragi-text-game-engine",
+  "productName": "Kitsuragi",
+  "version": "1.0.0",
+  "description": "prototype_app",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "LithiumNicotine",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "electron": "^31.7.7"
+  },
+  "build": {
+    "mac": {
+      "target": "dmg",
+      "icon": "icon.png"
+    }
+  }
+}

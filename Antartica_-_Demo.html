@@ -1,0 +1,2551 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Antartica - Demo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    body {
+      background-color: #1a1f1f;
+      color: #d8e6d8;
+      font-family: 'VT323', monospace;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+      overflow: hidden;
+    }
+    #game-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #1c2525;
+      padding: 20px;
+      border: 3px solid #2a3636;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 50, 50, 0.5);
+      position: relative;
+    }
+    #dialogue {
+      margin-bottom: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      text-shadow: 0 0 5px rgba(100, 255, 200, 0.3);
+      animation: flicker 4s infinite;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.98; }
+    }
+    .dialogue-text { margin: 10px 0; font-size: 1.2em; }
+    .inner-thought { color: #8cd1c8; font-style: italic; }
+    .option {
+      cursor: pointer;
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #2a3636;
+      border: 1px solid #3a4a4a;
+      border-radius: 3px;
+      font-size: 1.1em;
+    }
+    .option:hover {
+      background-color: #3a4a4a;
+      box-shadow: 0 0 10px rgba(100, 255, 200, 0.5);
+    }
+    .player-choice {
+      color: #e8d923;
+      margin: 10px 0;
+      padding-left: 20px;
+      border-left: 2px solid #e8d923;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game-container">
+    <div id="dialogue"></div>
+    <div id="options"></div>
+  </div>
+
+  <script>
+    const data = {
+  "nodes": [
+    {
+      "ID": "1db4c23b-5b5a-42b5-971b-2877382a399d",
+      "LinkBackID": 0,
+      "Body": "Antartica - Demo",
+      "column": 1,
+      "row": 1,
+      "color": "hsl(123, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": null,
+        "fromY": null,
+        "toX": null,
+        "toY": null
+      }
+    },
+    {
+      "ID": "17649c93-8169-4c5b-a592-08e6d0cd5e55",
+      "LinkBackID": "38ea8d14-074c-47ef-ab72-1d377d2272de",
+      "Body": "Cold wind. A dark blue sky. You are alone.",
+      "column": 3,
+      "row": "1",
+      "color": "hsl(355, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 481,
+        "fromY": 141,
+        "toX": 783,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "28a94de6-3438-4df4-a249-6fa5b4340df8",
+      "LinkBackID": "3d883cd5-7c70-4278-934d-eb8a4e7328ed",
+      "Body": "[Landscape] - You see the station with its long antenna blinking red.\nYour watch turns off with a blip. It's probably out of juice.\n",
+      "column": 5,
+      "row": "1",
+      "color": "hsl(149, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 1085,
+        "fromY": 141,
+        "toX": 1387,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "147cbecd-2e29-4f10-b37c-2a9c31227e9b",
+      "LinkBackID": "6bde4f1a-7aae-4cfd-ba00-ba785c3667c6",
+      "Body": "[Watch] - It's an old digital, and it's running out of juice. Just before it turns off with a blip, you catch a glimpse. It's 7 pm.",
+      "column": 5,
+      "row": "2",
+      "color": "hsl(268, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 1085,
+        "fromY": 373,
+        "toX": 1387,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "82a45ce0-4619-45ac-80ed-9ef77c3994fc",
+      "LinkBackID": "7556c049-a02e-429b-896f-2abb93cb5ad3",
+      "Body": "[Landscape] - You see the station with its long antenna blinking red.",
+      "column": 7,
+      "row": "2",
+      "color": "hsl(134, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 1689,
+        "fromY": 373,
+        "toX": 1991,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "f5ba3267-8641-4493-8cd8-fe0489c0386a",
+      "LinkBackID": "04bc6f4a-6117-43ae-8f95-7f8fc9ef9fc5",
+      "Body": "[Station] - It's empty. But the equipment is still working.",
+      "column": 7,
+      "row": "1",
+      "color": "hsl(36, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 1689,
+        "fromY": 141,
+        "toX": 1991,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "5d8a7dc3-49f2-4c22-a420-48e4c5b7f392",
+      "LinkBackID": "81fed64d-3bb4-477f-a313-6ff6738c251f",
+      "Body": "[Station] - It's empty. But the equipment is still working.",
+      "column": 9,
+      "row": "1",
+      "color": "hsl(148, 80%, 60%)",
+      "subnodeCount": 3,
+      "lines": {
+        "fromX": 2293,
+        "fromY": 141,
+        "toX": 2595,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "9ef9b4eb-b633-4a86-988c-c9419db49293",
+      "LinkBackID": "1d2c322b-1910-4dd6-bb26-3c359db7e202",
+      "Body": "It reads: \"The end is near\"",
+      "column": 11,
+      "row": "1",
+      "color": "hsl(2, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 2897,
+        "fromY": 141,
+        "toX": 3199,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "d84a77fd-1780-4a51-adcb-f0747202ad05",
+      "LinkBackID": "e4d3e064-5414-4874-846f-9bbf52a72f9d",
+      "Body": "It reads: \"The end is near\"",
+      "column": 9,
+      "row": "2",
+      "color": "hsl(101, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 2293,
+        "fromY": 373,
+        "toX": 2595,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "51be4d84-1134-40a8-a502-3d0d7ba3262c",
+      "LinkBackID": "450ab182-36c6-4787-97c1-52f2a872673d",
+      "Body": "The lights on the radio are all blinking orange. ",
+      "column": 9,
+      "row": "3",
+      "color": "hsl(235, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 2293,
+        "fromY": 605,
+        "toX": 2595,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "9c39de9e-c92a-496b-bc16-3be572794f97",
+      "LinkBackID": "046674e4-2788-416b-9bf4-880f1c5d2807",
+      "Body": "The lights on the radio are all blinking orange. ",
+      "column": 11,
+      "row": "2",
+      "color": "hsl(89, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 2897,
+        "fromY": 373,
+        "toX": 3199,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "6b65d017-d0cf-4a7d-b269-e8490e00c07f",
+      "LinkBackID": "eaa6accb-8aa6-4a25-926e-cadf0b60e0f3",
+      "Body": "[Radio] - Someone on the other side asks: \"What time is it?\"",
+      "column": 11,
+      "row": "3",
+      "color": "hsl(276, 80%, 60%)",
+      "subnodeCount": 3,
+      "lines": {
+        "fromX": 2897,
+        "fromY": 605,
+        "toX": 3199,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "c342888c-6411-4c26-9915-c013a281d1b4",
+      "LinkBackID": "37afa970-f702-4812-865d-bea2ecac6c75",
+      "Body": "[Radio] - Someone on the other side asks: \"What time is it?\"",
+      "column": 13,
+      "row": "1",
+      "color": "hsl(311, 80%, 60%)",
+      "subnodeCount": 3,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 141,
+        "toX": 3803,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "e65887d2-74bc-4325-b1cd-814c7395e9f3",
+      "LinkBackID": "098e45c7-9655-4fca-9bb3-80599bcc1c1e",
+      "Body": "\"ACCESS GRANTED! Last broadcast: The world is ending. 6 6 5, 5 9 10. Find Rufus Sachs.\"\n",
+      "column": 13,
+      "row": "3",
+      "color": "hsl(106, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 605,
+        "toX": 3803,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "a7641a07-7973-4c78-b118-989fa764506f",
+      "LinkBackID": "5c27ffd1-12f0-4bbd-a21e-589e65a0b920",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 13,
+      "row": "4",
+      "color": "hsl(317, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 837,
+        "toX": 3803,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "2c2e3e01-0a32-4113-bbaf-4862aa2adfec",
+      "LinkBackID": "c4db384d-c130-4fba-a436-3e765519a48b",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 13,
+      "row": "5",
+      "color": "hsl(105, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 1069,
+        "toX": 3803,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "f3349014-bb63-41ce-9432-3d2461e31058",
+      "LinkBackID": "9933abae-cb58-44fc-9072-304ef8f82c67",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 15,
+      "row": "2",
+      "color": "hsl(143, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 373,
+        "toX": 4407,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "ef6f09c5-1207-47a9-9653-aa7e60e32aad",
+      "LinkBackID": "ae068bd3-1d47-4036-8cbd-206953960846",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 15,
+      "row": "3",
+      "color": "hsl(98, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 605,
+        "toX": 4407,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "c90483c3-5499-4fd5-adb6-fd459d09ddc2",
+      "LinkBackID": "8a42777f-2aa3-4a5c-ac55-d68d85d39cef",
+      "Body": "\"ACCESS GRANTED! Last broadcast: The world is ending. 6 6 5, 5 9 10. Find Rufus Sachs.\"",
+      "column": 15,
+      "row": "1",
+      "color": "hsl(217, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 141,
+        "toX": 4407,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "dfc65e3d-9ab7-49aa-af85-bbccfee0fe6c",
+      "LinkBackID": "91e65c7f-1c29-4de2-8b4e-4ccf9d8fd9bd",
+      "Body": "The lights on the radio are all blinking orange. ",
+      "column": 13,
+      "row": "6",
+      "color": "hsl(294, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 1301,
+        "toX": 3803,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "0fa82bde-6e29-4099-a094-5fca95b7a8c0",
+      "LinkBackID": "d375a130-df5c-4568-92f8-2e32d2499306",
+      "Body": "[Radio] - Someone on the other side asks: \"What time is it?\"",
+      "column": 15,
+      "row": "4",
+      "color": "hsl(48, 80%, 60%)",
+      "subnodeCount": 3,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 837,
+        "toX": 4407,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "cdd63b48-f3e0-4b88-a818-a5ea317ecb1b",
+      "LinkBackID": "30fe8ace-4b2e-468b-b119-bc42a976ed50",
+      "Body": "\"ACCESS GRANTED! Last broadcast: The world is ending. 6 6 5, 5 9 10. Find Rufus Sachs.\"",
+      "column": 17,
+      "row": "1",
+      "color": "hsl(64, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 141,
+        "toX": 5011,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "9d38785e-482b-4eba-a25c-37a791e9d1db",
+      "LinkBackID": "abdfbfb0-cf54-4065-9754-317cab8037c9",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 17,
+      "row": "2",
+      "color": "hsl(174, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 373,
+        "toX": 5011,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "76efbad2-8e95-4af1-ae81-e15f15057c39",
+      "LinkBackID": "40171191-6561-46d6-8524-5a95dede8d09",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 17,
+      "row": "3",
+      "color": "hsl(252, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 605,
+        "toX": 5011,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "b9ce46f9-814a-4ddd-9670-d5bffd49fb01",
+      "LinkBackID": "5a4328d8-9b79-4d85-999f-dd91ce6ab1ea",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 11,
+      "row": "4",
+      "color": "hsl(337, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 2897,
+        "fromY": 837,
+        "toX": 3199,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "b632bbbd-f683-44a9-ab97-1effdf11446b",
+      "LinkBackID": "59ab87f5-009f-4057-98be-c08a35b568a7",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 13,
+      "row": "2",
+      "color": "hsl(25, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 373,
+        "toX": 3803,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "65f119ed-4182-4be9-81f0-86c79ae04780",
+      "LinkBackID": "e21424dc-d0b7-4648-b078-40d480111a4f",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 15,
+      "row": "5",
+      "color": "hsl(332, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 1069,
+        "toX": 4407,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "421f485d-8ba0-4709-8d9b-e2793696c252",
+      "LinkBackID": "75f7e087-64ef-49bf-bdc9-0725eb788af1",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 15,
+      "row": "6",
+      "color": "hsl(154, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 1301,
+        "toX": 4407,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "242dc3b2-afe4-4094-95ea-d9fbac888e6b",
+      "LinkBackID": "a87f61f0-a47a-4b75-9de2-c1de7a142677",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 15,
+      "row": "7",
+      "color": "hsl(258, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 1533,
+        "toX": 4407,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "3d335f95-0ba2-48d2-aff2-386aa31812ff",
+      "LinkBackID": "90d81d0e-3b75-4a45-ac4b-8e7a5b44b4c3",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 17,
+      "row": "4",
+      "color": "hsl(92, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 837,
+        "toX": 5011,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "2efa94f5-406d-45eb-bc24-f69a29623d20",
+      "LinkBackID": "6205ca7b-e697-43aa-ab1e-c1c6b115f71b",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 17,
+      "row": "5",
+      "color": "hsl(192, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 1069,
+        "toX": 5011,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "5cabf96d-6860-44cb-ab81-3f8d5986bbb8",
+      "LinkBackID": "a56c1fe6-c887-440c-bb12-88f8c5fcc47f",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 19,
+      "row": "2",
+      "color": "hsl(77, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 373,
+        "toX": 5615,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "79d83cbb-915f-48d8-a1e5-d2577e3a07f7",
+      "LinkBackID": "6a0d3b55-d73c-4256-bd60-aebf293927c5",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 19,
+      "row": "3",
+      "color": "hsl(98, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 605,
+        "toX": 5615,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "f696418c-539d-4847-82b3-2da607702d44",
+      "LinkBackID": "b9325a36-28cb-45fd-83bd-8c5ea0993dc4",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 19,
+      "row": "1",
+      "color": "hsl(121, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 141,
+        "toX": 5615,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "2f2b3c19-3ef3-487b-a30a-d899bb79068c",
+      "LinkBackID": "e746779a-08bd-408a-926b-87af159dc2f5",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 15,
+      "row": "9",
+      "color": "hsl(172, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 1997,
+        "toX": 4407,
+        "toY": 1997
+      }
+    },
+    {
+      "ID": "bfb5cae6-6ce2-4283-b44c-44e2d135cc64",
+      "LinkBackID": "3ae397e6-5acb-439e-9720-2edc3279d218",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 17,
+      "row": "7",
+      "color": "hsl(305, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 1533,
+        "toX": 5011,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "d3172866-2021-41bb-99a1-e15f0a1091e2",
+      "LinkBackID": "05c3d5f0-d5fc-4007-9621-bfaa55c6a92b",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 19,
+      "row": "5",
+      "color": "hsl(294, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 1069,
+        "toX": 5615,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "ad35d9be-1eea-4710-90d6-e4a576c5f7b8",
+      "LinkBackID": "9b788c40-5224-4080-be77-e645a1434019",
+      "Body": "You see a poster on one of the walls, an old movie. \"The sacrifice\" by R. Sachs.",
+      "column": 19,
+      "row": "4",
+      "color": "hsl(308, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 837,
+        "toX": 5615,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "7feeea54-618d-4e4e-82fe-2e882d2448dd",
+      "LinkBackID": "cb785ae5-707f-4c92-b196-c3ae7403cac5",
+      "Body": "You see a poster on one of the walls, an old movie. \"The sacrifice\" by R. Sachs.",
+      "column": 17,
+      "row": "6",
+      "color": "hsl(107, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 1301,
+        "toX": 5011,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "760bd789-0ee9-4e6e-a2b2-967df8174fe6",
+      "LinkBackID": "9d9ec94c-fcad-4d1d-8cfb-86ca47badc93",
+      "Body": "You see a poster on one of the walls, an old movie. \"The sacrifice\" by R. Sachs.",
+      "column": 15,
+      "row": "8",
+      "color": "hsl(153, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 1765,
+        "toX": 4407,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "ef408115-eb33-4592-81d2-b59d68142d83",
+      "LinkBackID": "ba100eb6-a916-4a2a-87cc-78a51f2197ac",
+      "Body": "A safe. Enter the password.",
+      "column": 21,
+      "row": "1",
+      "color": "hsl(161, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5917,
+        "fromY": 141,
+        "toX": 6219,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "7d275cb7-a0c7-4cda-a8a8-6892c34c0ea8",
+      "LinkBackID": "2dadedeb-f1ed-4a63-b1f9-f207bee4a452",
+      "Body": "A safe. Enter the password.",
+      "column": 17,
+      "row": "8",
+      "color": "hsl(60, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 1765,
+        "toX": 5011,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "d9272df4-d424-488c-b6df-c97e0bf7afe3",
+      "LinkBackID": "e4859874-112d-4640-9b40-0a00f9db31e6",
+      "Body": "A safe. Enter the password.",
+      "column": 19,
+      "row": "6",
+      "color": "hsl(142, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 1301,
+        "toX": 5615,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "e86d9044-31d6-4ec8-a1d3-4ac309d9c9d1",
+      "LinkBackID": "9766ae2e-0256-448e-b1f3-64cd91217400",
+      "Body": "[Safe] - It opens with a faint creak. Inside, you find nothing but some papers and a ceremonial knife.",
+      "column": 23,
+      "row": "1",
+      "color": "hsl(21, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 6521,
+        "fromY": 141,
+        "toX": 6823,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "d995a7b1-ac24-4ce2-9907-8202884d536a",
+      "LinkBackID": "62af27e9-a4cd-476e-b107-078397cebf85",
+      "Body": "[Papers] - \"The world is ending. It has ended before. Numerous times. But the end is never the end. Say what you wanna say about the Aztec but the sun rose every morning. Some people have light in them, but no one can see it. No one can feel it. Cut yourself and light will burst out of you. It will shine and illuminate the world. I longed for someone to see my light. It never happened. But I saved the world. The world I hated. The world that treated me like a stranger. I never belonged to this world. It never took me as its own. But still I never stopped dreaming. We will meet again. It won't be the end of you. It's a ritual for your purification. Saving the world is just a side effect. Use the knife. You know how. I'll explain everything. See you soon. -Thyme",
+      "column": 25,
+      "row": "1",
+      "color": "hsl(188, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 141,
+        "toX": 7427,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "9487df9c-8606-4490-b993-389ea2264671",
+      "LinkBackID": "f9d92f3a-3172-432f-adc2-89938ec84ebb",
+      "Body": "[Safe] - It opens with a faint creak. Inside, you find nothing but some papers and a ceremonial knife.",
+      "column": 21,
+      "row": "2",
+      "color": "hsl(45, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5917,
+        "fromY": 373,
+        "toX": 6219,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "8f6cb94f-5940-4684-9d43-70deffec6365",
+      "LinkBackID": "eeedae30-2a27-4d73-aea2-af069b74ec18",
+      "Body": "[Safe] - It opens with a faint creak. Inside, you find nothing but some papers and a ceremonial knife.",
+      "column": 19,
+      "row": "7",
+      "color": "hsl(313, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 1533,
+        "toX": 5615,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "36af0284-6c16-4349-b2a5-1362f1f80210",
+      "LinkBackID": "9e436e27-15f0-4de1-b749-fedc094968c8",
+      "Body": "Papers] - \"The world is ending. It has ended before. Numerous times. But the end is never the end. Say what you wanna say about the Aztec but the sun rose every morning. Some people have light in them, but no one can see it. No one can feel it. Cut yourself and light will burst out of you. It will shine and illuminate the world. I longed for someone to see my light. It never happened. But I saved the world. The world I hated. The world that treated me like a stranger. I never belonged to this world. It never took me as its own. But still I never stopped dreaming. We will meet again. It won't be the end of you. It's a ritual for your purification. Saving the world is just a side effect. Use the knife. You know how. I'll explain everything. See you soon. -Thyme",
+      "column": 21,
+      "row": "3",
+      "color": "hsl(184, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 5917,
+        "fromY": 605,
+        "toX": 6219,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "6eebf48f-f19e-4c22-934b-5738ccbcd9aa",
+      "LinkBackID": "d3973f57-7c6e-4eae-8cda-7ba8ccefbd16",
+      "Body": "[Papers] - \"The world is ending. It has ended before. Numerous times. But the end is never the end. Say what you wanna say about the Aztec but the sun rose every morning. Some people have light in them, but no one can see it. No one can feel it. Cut yourself and light will burst out of you. It will shine and illuminate the world. I longed for someone to see my light. It never happened. But I saved the world. The world I hated. The world that treated me like a stranger. I never belonged to this world. It never took me as its own. But still I never stopped dreaming. We will meet again. It won't be the end of you. It's a ritual for your purification. Saving the world is just a side effect. Use the knife. You know how. I'll explain everything. See you soon. -Thyme",
+      "column": 23,
+      "row": "2",
+      "color": "hsl(247, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 6521,
+        "fromY": 373,
+        "toX": 6823,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "1d0ba503-5256-46f5-af91-9333c8b1c920",
+      "LinkBackID": "0fbabaae-26ee-4a2f-ae2e-72ef622f65c1",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 23,
+      "row": "4",
+      "color": "hsl(148, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 6521,
+        "fromY": 837,
+        "toX": 6823,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "da29845c-ca77-4858-8ca6-b472a698ea46",
+      "LinkBackID": "fa726dab-1dcc-4111-8b32-673d9bf1ef92",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 25,
+      "row": "3",
+      "color": "hsl(218, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 605,
+        "toX": 7427,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "01a60bc4-8e27-4e58-b0bf-c37e24fd889a",
+      "LinkBackID": "e82e143d-fe18-48c4-815a-cc98f19973ae",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 27,
+      "row": "2",
+      "color": "hsl(190, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7729,
+        "fromY": 373,
+        "toX": 8031,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "7c026edc-b286-435a-bb91-a46884ec83a0",
+      "LinkBackID": "7ff084fe-61eb-49c7-92bd-db06c6405651",
+      "Body": "[Knife] - It's unbelievably cold. Looks new and feels light. ",
+      "column": 23,
+      "row": "3",
+      "color": "hsl(25, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 6521,
+        "fromY": 605,
+        "toX": 6823,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "8c309ba2-edac-4f72-9cb5-6892fd5cf042",
+      "LinkBackID": "61b21ad3-c198-40e2-9e33-3cb2e84fc98a",
+      "Body": "[Knife] - It's unbelievably cold. Looks new and feels light. ",
+      "column": 25,
+      "row": "2",
+      "color": "hsl(211, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 373,
+        "toX": 7427,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "f7475975-111f-463a-a135-0eba22a2291d",
+      "LinkBackID": "247a92ef-d295-4412-955a-ffd542b015cd",
+      "Body": "[Knife] - It's unbelievably cold. Looks new and feels light. ",
+      "column": 27,
+      "row": "1",
+      "color": "hsl(111, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 7729,
+        "fromY": 141,
+        "toX": 8031,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "fa4deddc-229f-41b9-8ad1-3e5a0dd3bce1",
+      "LinkBackID": "18157cb1-3f3a-4267-8799-2ccad05ffb08",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 25,
+      "row": "5",
+      "color": "hsl(149, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 1069,
+        "toX": 7427,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "04e2fd24-e799-409b-b9f1-ed9c1e6f3e4d",
+      "LinkBackID": "27dd131b-ab3c-4181-87db-f951aa684853",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 27,
+      "row": "4",
+      "color": "hsl(321, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7729,
+        "fromY": 837,
+        "toX": 8031,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "a364fca2-b12a-413d-8919-eb935b7255dc",
+      "LinkBackID": "d4a675d1-0d1d-4657-9357-35417460e556",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 29,
+      "row": "2",
+      "color": "hsl(284, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 8333,
+        "fromY": 373,
+        "toX": 8635,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "d09099d2-7cac-42d9-8d3f-2daadd873be1",
+      "LinkBackID": "92d9fa4b-ad3e-4a7a-a937-1a455d7bcaca",
+      "Body": "You feel like you have done this before, or you have seen someone do it. It feels familiar. You're a natural. You take the knife and slowly cut your chest open. Blood is getting everywhere. The pain is excruciating. You peel your skin back with both hands and a ray of Light starts shining from your chest! Then two. And then another! It's dazzling and pure. It makes you forget the pain. You slip in and out of consciousness. And then it's over. Darkness returns. You check your chest. It's not hurting anymore and there are no scars. But your clothes are still red.",
+      "column": 27,
+      "row": "3",
+      "color": "hsl(250, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 7729,
+        "fromY": 605,
+        "toX": 8031,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "6df7919d-e8d6-44cd-8821-118f43bffb52",
+      "LinkBackID": "79d1f353-250e-4cae-99eb-3a44d5aebe0c",
+      "Body": "You feel like you have done this before, or you have seen someone do it. It feels familiar. You're a natural. You take the knife and slowly cut your chest open. Blood is getting everywhere. The pain is excruciating. You peel your skin back with both hands and a ray of Light starts shining from your chest! Then two. And then another! It's dazzling and pure. It makes you forget the pain. You slip in and out of consciousness. And then it's over. Darkness returns. You check your chest. It's not hurting anymore and there are no scars. But your clothes are still red.",
+      "column": 25,
+      "row": "4",
+      "color": "hsl(134, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 837,
+        "toX": 7427,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "f3c4f577-6bcd-49ad-a800-47edf4a610ad",
+      "LinkBackID": "c6f5bdd6-f48f-40d4-8359-692984488be1",
+      "Body": "You feel like you have done this before, or you have seen someone do it. It feels familiar. You're a natural. You take the knife and slowly cut your chest open. Blood is getting everywhere. The pain is excruciating. You peel your skin back with both hands and a ray of Light starts shining from your chest! Then two. And then another! It's dazzling and pure. It makes you forget the pain. You slip in and out of consciousness. And then it's over. Darkness returns. You check your chest. It's not hurting anymore and there are no scars. But your clothes are still red.",
+      "column": 29,
+      "row": "1",
+      "color": "hsl(68, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 8333,
+        "fromY": 141,
+        "toX": 8635,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "3a8ab6aa-40cf-4b73-a10a-148dd2b364ca",
+      "LinkBackID": "29627957-d0c4-4f74-91a4-4c7a066ac03a",
+      "Body": "The sky is pitch black but filled with a sea of stars. All blinking in harmony. It's mesmerizing. You take a deep breath. You feel like you've been born again, anew, light like a feather.  It's awfully quiet. Maybe it's the sound of creation, a blank canvas to be painted with different sound waves. You don't remember how you ended up here but you're glad you did. The icy road lies ahead. You should get moving. Something, or someone is waiting for you out there. A friend. A friend with answers you awfully need. And in a labyrinth far away, there is a world disconnecting from yours. Remember this moment. They will ask about it. The numbers are important, and so are you. Never forget that. Cross the veil of night.",
+      "column": 31,
+      "row": "1",
+      "color": "hsl(110, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 8937,
+        "fromY": 141,
+        "toX": 9239,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "81cc44ce-f100-41ef-9110-45f167de75a2",
+      "LinkBackID": "db0bca77-977e-4a3e-aee5-f1faea6c8c99",
+      "Body": "The sky is pitch black but filled with a sea of stars. All blinking in harmony. It's mesmerizing. You take a deep breath. You feel like you've been born again, anew, light like a feather.  It's awfully quiet. Maybe it's the sound of creation, a blank canvas to be painted with different sound waves. You don't remember how you ended up here but you're glad you did. The icy road lies ahead. You should get moving. Something, or someone is waiting for you out there. A friend. A friend with answers you awfully need. And in a labyrinth far away, there is a world disconnecting from yours. Remember this moment. They will ask about it. The numbers are important, and so are you. Never forget that. Cross the veil of night.",
+      "column": 27,
+      "row": "5",
+      "color": "hsl(199, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7729,
+        "fromY": 1069,
+        "toX": 8031,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "08868b23-527d-4786-8b9b-537208b5a3c2",
+      "LinkBackID": "bae33377-7b59-4eba-87e1-e7871951dcd7",
+      "Body": "The sky is pitch black but filled with a sea of stars. All blinking in harmony. It's mesmerizing. You take a deep breath. You feel like you've been born again, anew, light like a feather.  It's awfully quiet. Maybe it's the sound of creation, a blank canvas to be painted with different sound waves. You don't remember how you ended up here but you're glad you did. The icy road lies ahead. You should get moving. Something, or someone is waiting for you out there. A friend. A friend with answers you awfully need. And in a labyrinth far away, there is a world disconnecting from yours. Remember this moment. They will ask about it. The numbers are important, and so are you. Never forget that. Cross the veil of night.",
+      "column": 29,
+      "row": "3",
+      "color": "hsl(358, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 8333,
+        "fromY": 605,
+        "toX": 8635,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "5eb8f26b-0c68-4aa1-b713-eb3f64203ed9",
+      "LinkBackID": "f78f13a2-0777-42f0-a1ce-31d7d724f5bd",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 11,
+      "row": "6",
+      "color": "hsl(357, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 2897,
+        "fromY": 1301,
+        "toX": 3199,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "ebb48a42-bd87-4cf8-ae75-e67861a01238",
+      "LinkBackID": "ad616072-86ff-4ba8-9431-3ab18c759a1e",
+      "Body": "The lights on the radio are all blinking orange. ",
+      "column": 11,
+      "row": "5",
+      "color": "hsl(100, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 2897,
+        "fromY": 1069,
+        "toX": 3199,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "bda3db32-560e-45a5-a4b7-20d699111511",
+      "LinkBackID": "547f8e29-6b9d-4446-9760-5343ad916929",
+      "Body": "[Radio] - Someone on the other side asks: \"What time is it?\"",
+      "column": 13,
+      "row": "7",
+      "color": "hsl(161, 80%, 60%)",
+      "subnodeCount": 3,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 1533,
+        "toX": 3803,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "851bbaf8-f0e5-4ca1-8bc1-257371d9050d",
+      "LinkBackID": "3acbdf86-73a9-4b86-847e-7666a00a071b",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 13,
+      "row": "8",
+      "color": "hsl(280, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 3501,
+        "fromY": 1765,
+        "toX": 3803,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "36c7e29b-3ddf-494b-89aa-7e4b994ad36c",
+      "LinkBackID": "78c67575-8ca4-4761-aeee-5242de9fc65b",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 15,
+      "row": "12",
+      "color": "hsl(67, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 2693,
+        "toX": 4407,
+        "toY": 2693
+      }
+    },
+    {
+      "ID": "9ea7a2d6-c1fa-4266-8aec-eeca3baa51a1",
+      "LinkBackID": "45483123-1cb9-4f3a-82a0-4b323cceb3cb",
+      "Body": "\"ACCESS DENIED! INITIATING SELF-DESTRUCTION\" The lights all turn off.",
+      "column": 15,
+      "row": "11",
+      "color": "hsl(147, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 2461,
+        "toX": 4407,
+        "toY": 2461
+      }
+    },
+    {
+      "ID": "06b5630e-509e-4fdc-837d-d23fd2eca297",
+      "LinkBackID": "c120ab66-1ab6-4222-a37c-5ecd84f36924",
+      "Body": "\"ACCESS GRANTED! Last broadcast: The world is ending. 6 6 5, 5 9 10. Find Rufus Sachs.\"",
+      "column": 15,
+      "row": "10",
+      "color": "hsl(11, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 4105,
+        "fromY": 2229,
+        "toX": 4407,
+        "toY": 2229
+      }
+    },
+    {
+      "ID": "5939bc04-9666-4888-b746-f2617b99e013",
+      "LinkBackID": "cc76f1ea-baf6-4e60-9a8a-87c4dba324c8",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 17,
+      "row": "11",
+      "color": "hsl(128, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 2461,
+        "toX": 5011,
+        "toY": 2461
+      }
+    },
+    {
+      "ID": "6b1e7171-1198-409e-9fc2-c12d438b8fee",
+      "LinkBackID": "e49194a2-aa62-4865-8f56-63602581f7a4",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 17,
+      "row": "10",
+      "color": "hsl(6, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 2229,
+        "toX": 5011,
+        "toY": 2229
+      }
+    },
+    {
+      "ID": "4918cf15-0ab1-4e0c-9af5-9bf8e0ecf396",
+      "LinkBackID": "b48f97a4-c52a-4a04-b443-e303dc9f0530",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 17,
+      "row": "12",
+      "color": "hsl(98, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 2693,
+        "toX": 5011,
+        "toY": 2693
+      }
+    },
+    {
+      "ID": "a72e0ba3-f2b8-47e4-be48-0a670e90b708",
+      "LinkBackID": "c1335d3c-68ef-4628-ab89-6002bbf2f9e9",
+      "Body": "You see a poster on one of the walls, an old movie. \"The sacrifice\" by R. Sachs.",
+      "column": 17,
+      "row": "9",
+      "color": "hsl(201, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 4709,
+        "fromY": 1997,
+        "toX": 5011,
+        "toY": 1997
+      }
+    },
+    {
+      "ID": "aa45dde9-15ff-4f00-956a-1ed4cd3de6fc",
+      "LinkBackID": "32952700-0cf4-471e-80ef-8e8107b1ce95",
+      "Body": "A safe. Enter the password.",
+      "column": 19,
+      "row": "8",
+      "color": "hsl(167, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5313,
+        "fromY": 1765,
+        "toX": 5615,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "e6c70a98-9673-4cda-89b7-5caeb8c82e25",
+      "LinkBackID": "b6f97c26-52b0-4ae3-87c9-f5f47674126f",
+      "Body": "[Safe] - It opens with a faint creak. Inside, you find nothing but some papers and a ceremonial knife.",
+      "column": 21,
+      "row": "4",
+      "color": "hsl(44, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 5917,
+        "fromY": 837,
+        "toX": 6219,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "786fd3e3-6948-46ce-be73-1c96dc6f38e2",
+      "LinkBackID": "46ab6b3b-8477-435b-8b67-a2951deac4b9",
+      "Body": "[Papers] - \"The world is ending. It has ended before. Numerous times. But the end is never the end. Say what you wanna say about the Aztec but the sun rose every morning. Some people have light in them, but no one can see it. No one can feel it. Cut yourself and light will burst out of you. It will shine and illuminate the world. I longed for someone to see my light. It never happened. But I saved the world. The world I hated. The world that treated me like a stranger. I never belonged to this world. It never took me as its own. But still I never stopped dreaming. We will meet again. It won't be the end of you. It's a ritual for your purification. Saving the world is just a side effect. Use the knife. You know how. I'll explain everything. See you soon. -Thyme",
+      "column": 23,
+      "row": "5",
+      "color": "hsl(23, 80%, 60%)",
+      "subnodeCount": 2,
+      "lines": {
+        "fromX": 6521,
+        "fromY": 1069,
+        "toX": 6823,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "ff26a28e-5a93-4fae-81ba-02176f662490",
+      "LinkBackID": "653f42fe-2966-4aa8-a2df-a75d6acc2829",
+      "Body": "As you step outside, you notice that something is different. An astonishing number of orange dots are falling from the sky, leaving trails like a meteor shower. The wind is no longer cold. It grows hotter and hotter, and the ice begins to melt. The world is coming to an end. There is nothing you can do. Embrace it. Darkness falls, and warmth is replaced by burning. Maybe in another world, in another life, things would have been different.",
+      "column": 25,
+      "row": "7",
+      "color": "hsl(84, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 1533,
+        "toX": 7427,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "1cb55c04-8914-4625-9206-8343caa6b086",
+      "LinkBackID": "ef0e2af4-ad1c-4d1c-9169-ae3dad70554f",
+      "Body": "You feel like you have done this before, or you have seen someone do it. It feels familiar. You're a natural. You take the knife and slowly cut your chest open. Blood is getting everywhere. The pain is excruciating. You peel your skin back with both hands and a ray of Light starts shining from your chest! Then two. And then another! It's dazzling and pure. It makes you forget the pain. You slip in and out of consciousness. And then it's over. Darkness returns. You check your chest. It's not hurting anymore and there are no scars. But your clothes are still red.",
+      "column": 25,
+      "row": "6",
+      "color": "hsl(75, 80%, 60%)",
+      "subnodeCount": 1,
+      "lines": {
+        "fromX": 7125,
+        "fromY": 1301,
+        "toX": 7427,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "81f95969-3f22-4897-a382-5d52f4ca91fb",
+      "LinkBackID": "9e9556f2-95ed-4908-9998-928b0faf6a2e",
+      "Body": "The sky is pitch black but filled with a sea of stars. All blinking in harmony. It's mesmerizing. You take a deep breath. You feel like you've been born again, anew, light like a feather.  It's awfully quiet. Maybe it's the sound of creation, a blank canvas to be painted with different sound waves. You don't remember how you ended up here but you're glad you did. The icy road lies ahead. You should get moving. Something, or someone is waiting for you out there. A friend. A friend with answers you awfully need. And in a labyrinth far away, there is a world disconnecting from yours. Remember this moment. They will ask about it. The numbers are important, and so are you. Never forget that. Cross the veil of night.",
+      "column": 27,
+      "row": "6",
+      "color": "hsl(280, 80%, 60%)",
+      "subnodeCount": 0,
+      "lines": {
+        "fromX": 7729,
+        "fromY": 1301,
+        "toX": 8031,
+        "toY": 1301
+      }
+    }
+  ],
+  "subnodes": [
+    {
+      "ID": "38ea8d14-074c-47ef-ab72-1d377d2272de",
+      "ParentID": "1db4c23b-5b5a-42b5-971b-2877382a399d",
+      "Body": "START",
+      "column": 2,
+      "row": "1",
+      "color": "hsl(123, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 179,
+        "fromY": 141,
+        "toX": 481,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "3d883cd5-7c70-4278-934d-eb8a4e7328ed",
+      "ParentID": "17649c93-8169-4c5b-a592-08e6d0cd5e55",
+      "Body": "[Look around]",
+      "column": 4,
+      "row": "1",
+      "color": "hsl(355, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 783,
+        "fromY": 141,
+        "toX": 1085,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "6bde4f1a-7aae-4cfd-ba00-ba785c3667c6",
+      "ParentID": "17649c93-8169-4c5b-a592-08e6d0cd5e55",
+      "Body": "[Check you watch]",
+      "column": 4,
+      "row": "2",
+      "color": "hsl(355, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 783,
+        "fromY": 141,
+        "toX": 1085,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "04bc6f4a-6117-43ae-8f95-7f8fc9ef9fc5",
+      "ParentID": "28a94de6-3438-4df4-a249-6fa5b4340df8",
+      "Body": "[Walk towards it]",
+      "column": 6,
+      "row": "1",
+      "color": "hsl(149, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 1387,
+        "fromY": 141,
+        "toX": 1689,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "7556c049-a02e-429b-896f-2abb93cb5ad3",
+      "ParentID": "147cbecd-2e29-4f10-b37c-2a9c31227e9b",
+      "Body": "[Look around]",
+      "column": 6,
+      "row": "2",
+      "color": "hsl(268, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 1387,
+        "fromY": 373,
+        "toX": 1689,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "81fed64d-3bb4-477f-a313-6ff6738c251f",
+      "ParentID": "82a45ce0-4619-45ac-80ed-9ef77c3994fc",
+      "Body": "[Walk towards it]",
+      "column": 8,
+      "row": "1",
+      "color": "hsl(134, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 1991,
+        "fromY": 373,
+        "toX": 2293,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "e4d3e064-5414-4874-846f-9bbf52a72f9d",
+      "ParentID": "f5ba3267-8641-4493-8cd8-fe0489c0386a",
+      "Body": "[Check the paperwork on your nearest desk]",
+      "column": 8,
+      "row": "2",
+      "color": "hsl(36, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 1991,
+        "fromY": 141,
+        "toX": 2293,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "1d2c322b-1910-4dd6-bb26-3c359db7e202",
+      "ParentID": "5d8a7dc3-49f2-4c22-a420-48e4c5b7f392",
+      "Body": "[Check the paperwork on your nearest desk]",
+      "column": 10,
+      "row": "1",
+      "color": "hsl(148, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 2595,
+        "fromY": 141,
+        "toX": 2897,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "046674e4-2788-416b-9bf4-880f1c5d2807",
+      "ParentID": "5d8a7dc3-49f2-4c22-a420-48e4c5b7f392",
+      "Body": "[Check the equipment]",
+      "column": 10,
+      "row": "2",
+      "color": "hsl(148, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 2595,
+        "fromY": 141,
+        "toX": 2897,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "450ab182-36c6-4787-97c1-52f2a872673d",
+      "ParentID": "f5ba3267-8641-4493-8cd8-fe0489c0386a",
+      "Body": "[Check the equipment]",
+      "column": 8,
+      "row": "3",
+      "color": "hsl(36, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 1991,
+        "fromY": 141,
+        "toX": 2293,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "eaa6accb-8aa6-4a25-926e-cadf0b60e0f3",
+      "ParentID": "51be4d84-1134-40a8-a502-3d0d7ba3262c",
+      "Body": "[Press \"Connect\"]",
+      "column": 10,
+      "row": "3",
+      "color": "hsl(235, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 2595,
+        "fromY": 605,
+        "toX": 2897,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "5a4328d8-9b79-4d85-999f-dd91ce6ab1ea",
+      "ParentID": "51be4d84-1134-40a8-a502-3d0d7ba3262c",
+      "Body": "[Don't pay any attention. Leave the station.]",
+      "column": 10,
+      "row": "4",
+      "color": "hsl(235, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 2595,
+        "fromY": 605,
+        "toX": 2897,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "37afa970-f702-4812-865d-bea2ecac6c75",
+      "ParentID": "9c39de9e-c92a-496b-bc16-3be572794f97",
+      "Body": "[Press \"Connect\"]",
+      "column": 12,
+      "row": "1",
+      "color": "hsl(89, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 373,
+        "toX": 3501,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "59ab87f5-009f-4057-98be-c08a35b568a7",
+      "ParentID": "9c39de9e-c92a-496b-bc16-3be572794f97",
+      "Body": "[Don't pay any attention. Leave the station.]",
+      "column": 12,
+      "row": "2",
+      "color": "hsl(89, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 373,
+        "toX": 3501,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "8a42777f-2aa3-4a5c-ac55-d68d85d39cef",
+      "ParentID": "c342888c-6411-4c26-9915-c013a281d1b4",
+      "Body": "\"7 PM\"",
+      "column": 14,
+      "row": "1",
+      "color": "hsl(311, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 141,
+        "toX": 4105,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "9933abae-cb58-44fc-9072-304ef8f82c67",
+      "ParentID": "c342888c-6411-4c26-9915-c013a281d1b4",
+      "Body": "\"9 PM\"",
+      "column": 14,
+      "row": "2",
+      "color": "hsl(311, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 141,
+        "toX": 4105,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "ae068bd3-1d47-4036-8cbd-206953960846",
+      "ParentID": "c342888c-6411-4c26-9915-c013a281d1b4",
+      "Body": "\"I don't know\"",
+      "column": 14,
+      "row": "3",
+      "color": "hsl(311, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 141,
+        "toX": 4105,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "098e45c7-9655-4fca-9bb3-80599bcc1c1e",
+      "ParentID": "6b65d017-d0cf-4a7d-b269-e8490e00c07f",
+      "Body": "\"7 PM\"",
+      "column": 12,
+      "row": "3",
+      "color": "hsl(276, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 605,
+        "toX": 3501,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "5c27ffd1-12f0-4bbd-a21e-589e65a0b920",
+      "ParentID": "6b65d017-d0cf-4a7d-b269-e8490e00c07f",
+      "Body": "\"9 PM\"",
+      "column": 12,
+      "row": "4",
+      "color": "hsl(276, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 605,
+        "toX": 3501,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "c4db384d-c130-4fba-a436-3e765519a48b",
+      "ParentID": "6b65d017-d0cf-4a7d-b269-e8490e00c07f",
+      "Body": "\"I don't know\"",
+      "column": 12,
+      "row": "5",
+      "color": "hsl(276, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 605,
+        "toX": 3501,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "91e65c7f-1c29-4de2-8b4e-4ccf9d8fd9bd",
+      "ParentID": "9ef9b4eb-b633-4a86-988c-c9419db49293",
+      "Body": "[Check the equipment]",
+      "column": 12,
+      "row": "6",
+      "color": "hsl(2, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 141,
+        "toX": 3501,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "d375a130-df5c-4568-92f8-2e32d2499306",
+      "ParentID": "dfc65e3d-9ab7-49aa-af85-bbccfee0fe6c",
+      "Body": "[Press \"Connect\"]",
+      "column": 14,
+      "row": "4",
+      "color": "hsl(294, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 1301,
+        "toX": 4105,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "e21424dc-d0b7-4648-b078-40d480111a4f",
+      "ParentID": "dfc65e3d-9ab7-49aa-af85-bbccfee0fe6c",
+      "Body": "[Don't pay any attention. Leave the station.]",
+      "column": 14,
+      "row": "5",
+      "color": "hsl(294, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 1301,
+        "toX": 4105,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "30fe8ace-4b2e-468b-b119-bc42a976ed50",
+      "ParentID": "0fa82bde-6e29-4099-a094-5fca95b7a8c0",
+      "Body": "\"7 PM\"",
+      "column": 16,
+      "row": "1",
+      "color": "hsl(48, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 837,
+        "toX": 4709,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "abdfbfb0-cf54-4065-9754-317cab8037c9",
+      "ParentID": "0fa82bde-6e29-4099-a094-5fca95b7a8c0",
+      "Body": "\"9 PM\"",
+      "column": 16,
+      "row": "2",
+      "color": "hsl(48, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 837,
+        "toX": 4709,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "40171191-6561-46d6-8524-5a95dede8d09",
+      "ParentID": "0fa82bde-6e29-4099-a094-5fca95b7a8c0",
+      "Body": "\"I don't know\"",
+      "column": 16,
+      "row": "3",
+      "color": "hsl(48, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 837,
+        "toX": 4709,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "75f7e087-64ef-49bf-bdc9-0725eb788af1",
+      "ParentID": "2c2e3e01-0a32-4113-bbaf-4862aa2adfec",
+      "Body": "[Leave the station]",
+      "column": 14,
+      "row": "6",
+      "color": "hsl(105, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 1069,
+        "toX": 4105,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "a87f61f0-a47a-4b75-9de2-c1de7a142677",
+      "ParentID": "a7641a07-7973-4c78-b118-989fa764506f",
+      "Body": "[Leave the station]",
+      "column": 14,
+      "row": "7",
+      "color": "hsl(317, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 837,
+        "toX": 4105,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "90d81d0e-3b75-4a45-ac4b-8e7a5b44b4c3",
+      "ParentID": "f3349014-bb63-41ce-9432-3d2461e31058",
+      "Body": "[Leave the station]",
+      "column": 16,
+      "row": "4",
+      "color": "hsl(143, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 373,
+        "toX": 4709,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "6205ca7b-e697-43aa-ab1e-c1c6b115f71b",
+      "ParentID": "ef6f09c5-1207-47a9-9653-aa7e60e32aad",
+      "Body": "[Leave the station]",
+      "column": 16,
+      "row": "5",
+      "color": "hsl(98, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 605,
+        "toX": 4709,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "b9325a36-28cb-45fd-83bd-8c5ea0993dc4",
+      "ParentID": "76efbad2-8e95-4af1-ae81-e15f15057c39",
+      "Body": "[Leave the station]",
+      "column": 18,
+      "row": "1",
+      "color": "hsl(252, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 605,
+        "toX": 5313,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "a56c1fe6-c887-440c-bb12-88f8c5fcc47f",
+      "ParentID": "9d38785e-482b-4eba-a25c-37a791e9d1db",
+      "Body": "[Leave the station]",
+      "column": 18,
+      "row": "2",
+      "color": "hsl(174, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 373,
+        "toX": 5313,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "6a0d3b55-d73c-4256-bd60-aebf293927c5",
+      "ParentID": "76efbad2-8e95-4af1-ae81-e15f15057c39",
+      "Body": "[Leave the station]",
+      "column": 18,
+      "row": "3",
+      "color": "hsl(252, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 605,
+        "toX": 5313,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "9b788c40-5224-4080-be77-e645a1434019",
+      "ParentID": "cdd63b48-f3e0-4b88-a818-a5ea317ecb1b",
+      "Body": "[Look around]",
+      "column": 18,
+      "row": "4",
+      "color": "hsl(64, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 141,
+        "toX": 5313,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "9d9ec94c-fcad-4d1d-8cfb-86ca47badc93",
+      "ParentID": "e65887d2-74bc-4325-b1cd-814c7395e9f3",
+      "Body": "[Look around]",
+      "column": 14,
+      "row": "8",
+      "color": "hsl(106, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 605,
+        "toX": 4105,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "cb785ae5-707f-4c92-b196-c3ae7403cac5",
+      "ParentID": "c90483c3-5499-4fd5-adb6-fd459d09ddc2",
+      "Body": "[Look around]",
+      "column": 16,
+      "row": "6",
+      "color": "hsl(217, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 141,
+        "toX": 4709,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "05c3d5f0-d5fc-4007-9621-bfaa55c6a92b",
+      "ParentID": "cdd63b48-f3e0-4b88-a818-a5ea317ecb1b",
+      "Body": "[Leave the station]",
+      "column": 18,
+      "row": "5",
+      "color": "hsl(64, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 141,
+        "toX": 5313,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "3ae397e6-5acb-439e-9720-2edc3279d218",
+      "ParentID": "c90483c3-5499-4fd5-adb6-fd459d09ddc2",
+      "Body": "[Leave the station]",
+      "column": 16,
+      "row": "7",
+      "color": "hsl(217, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 141,
+        "toX": 4709,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "e746779a-08bd-408a-926b-87af159dc2f5",
+      "ParentID": "e65887d2-74bc-4325-b1cd-814c7395e9f3",
+      "Body": "[Leave the station]",
+      "column": 14,
+      "row": "9",
+      "color": "hsl(106, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 605,
+        "toX": 4105,
+        "toY": 1997
+      }
+    },
+    {
+      "ID": "ba100eb6-a916-4a2a-87cc-78a51f2197ac",
+      "ParentID": "ad35d9be-1eea-4710-90d6-e4a576c5f7b8",
+      "Body": "[Rip the poster]",
+      "column": 20,
+      "row": "1",
+      "color": "hsl(308, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5615,
+        "fromY": 837,
+        "toX": 5917,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "2dadedeb-f1ed-4a63-b1f9-f207bee4a452",
+      "ParentID": "760bd789-0ee9-4e6e-a2b2-967df8174fe6",
+      "Body": "[Rip the poster]",
+      "column": 16,
+      "row": "8",
+      "color": "hsl(153, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 1765,
+        "toX": 4709,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "e4859874-112d-4640-9b40-0a00f9db31e6",
+      "ParentID": "7feeea54-618d-4e4e-82fe-2e882d2448dd",
+      "Body": "[Rip the poster]",
+      "column": 18,
+      "row": "6",
+      "color": "hsl(107, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 1301,
+        "toX": 5313,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "9766ae2e-0256-448e-b1f3-64cd91217400",
+      "ParentID": "ef408115-eb33-4592-81d2-b59d68142d83",
+      "Body": "6659510",
+      "column": 22,
+      "row": "1",
+      "color": "hsl(161, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6219,
+        "fromY": 141,
+        "toX": 6521,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "f9d92f3a-3172-432f-adc2-89938ec84ebb",
+      "ParentID": "d9272df4-d424-488c-b6df-c97e0bf7afe3",
+      "Body": "6659510",
+      "column": 20,
+      "row": "2",
+      "color": "hsl(142, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5615,
+        "fromY": 1301,
+        "toX": 5917,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "eeedae30-2a27-4d73-aea2-af069b74ec18",
+      "ParentID": "7d275cb7-a0c7-4cda-a8a8-6892c34c0ea8",
+      "Body": "6659510",
+      "column": 18,
+      "row": "7",
+      "color": "hsl(60, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 1765,
+        "toX": 5313,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "62af27e9-a4cd-476e-b107-078397cebf85",
+      "ParentID": "e86d9044-31d6-4ec8-a1d3-4ac309d9c9d1",
+      "Body": "[Read the papers]",
+      "column": 24,
+      "row": "1",
+      "color": "hsl(21, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 141,
+        "toX": 7125,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "247a92ef-d295-4412-955a-ffd542b015cd",
+      "ParentID": "d995a7b1-ac24-4ce2-9907-8202884d536a",
+      "Body": "[Take the knife]",
+      "column": 26,
+      "row": "1",
+      "color": "hsl(188, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 7427,
+        "fromY": 141,
+        "toX": 7729,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "e82e143d-fe18-48c4-815a-cc98f19973ae",
+      "ParentID": "d995a7b1-ac24-4ce2-9907-8202884d536a",
+      "Body": "[Leave the station]",
+      "column": 26,
+      "row": "2",
+      "color": "hsl(188, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 7427,
+        "fromY": 141,
+        "toX": 7729,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "9e436e27-15f0-4de1-b749-fedc094968c8",
+      "ParentID": "8f6cb94f-5940-4684-9d43-70deffec6365",
+      "Body": "[Read the papers]",
+      "column": 20,
+      "row": "3",
+      "color": "hsl(313, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5615,
+        "fromY": 1533,
+        "toX": 5917,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "d3973f57-7c6e-4eae-8cda-7ba8ccefbd16",
+      "ParentID": "9487df9c-8606-4490-b993-389ea2264671",
+      "Body": "[Read the papers]",
+      "column": 22,
+      "row": "2",
+      "color": "hsl(45, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6219,
+        "fromY": 373,
+        "toX": 6521,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "61b21ad3-c198-40e2-9e33-3cb2e84fc98a",
+      "ParentID": "6eebf48f-f19e-4c22-934b-5738ccbcd9aa",
+      "Body": "[Take the knife]",
+      "column": 24,
+      "row": "2",
+      "color": "hsl(247, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 373,
+        "toX": 7125,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "fa726dab-1dcc-4111-8b32-673d9bf1ef92",
+      "ParentID": "6eebf48f-f19e-4c22-934b-5738ccbcd9aa",
+      "Body": "[Leave the station]",
+      "column": 24,
+      "row": "3",
+      "color": "hsl(247, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 373,
+        "toX": 7125,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "7ff084fe-61eb-49c7-92bd-db06c6405651",
+      "ParentID": "36af0284-6c16-4349-b2a5-1362f1f80210",
+      "Body": "[Take the knife]",
+      "column": 22,
+      "row": "3",
+      "color": "hsl(184, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6219,
+        "fromY": 605,
+        "toX": 6521,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "0fbabaae-26ee-4a2f-ae2e-72ef622f65c1",
+      "ParentID": "36af0284-6c16-4349-b2a5-1362f1f80210",
+      "Body": "[Leave the station]",
+      "column": 22,
+      "row": "4",
+      "color": "hsl(184, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6219,
+        "fromY": 605,
+        "toX": 6521,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "92d9fa4b-ad3e-4a7a-a937-1a455d7bcaca",
+      "ParentID": "8c309ba2-edac-4f72-9cb5-6892fd5cf042",
+      "Body": "[Cut yourself open]",
+      "column": 26,
+      "row": "3",
+      "color": "hsl(211, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 7427,
+        "fromY": 373,
+        "toX": 7729,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "27dd131b-ab3c-4181-87db-f951aa684853",
+      "ParentID": "8c309ba2-edac-4f72-9cb5-6892fd5cf042",
+      "Body": "[Leave the station]",
+      "column": 26,
+      "row": "4",
+      "color": "hsl(211, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 7427,
+        "fromY": 373,
+        "toX": 7729,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "79d1f353-250e-4cae-99eb-3a44d5aebe0c",
+      "ParentID": "7c026edc-b286-435a-bb91-a46884ec83a0",
+      "Body": "[Cut yourself open]",
+      "column": 24,
+      "row": "4",
+      "color": "hsl(25, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 605,
+        "toX": 7125,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "18157cb1-3f3a-4267-8799-2ccad05ffb08",
+      "ParentID": "7c026edc-b286-435a-bb91-a46884ec83a0",
+      "Body": "[Leave the station]",
+      "column": 24,
+      "row": "5",
+      "color": "hsl(25, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 605,
+        "toX": 7125,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "c6f5bdd6-f48f-40d4-8359-692984488be1",
+      "ParentID": "f7475975-111f-463a-a135-0eba22a2291d",
+      "Body": "[Cut yourself open]",
+      "column": 28,
+      "row": "1",
+      "color": "hsl(111, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 8031,
+        "fromY": 141,
+        "toX": 8333,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "d4a675d1-0d1d-4657-9357-35417460e556",
+      "ParentID": "f7475975-111f-463a-a135-0eba22a2291d",
+      "Body": "[Leave the station]",
+      "column": 28,
+      "row": "2",
+      "color": "hsl(111, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 8031,
+        "fromY": 141,
+        "toX": 8333,
+        "toY": 373
+      }
+    },
+    {
+      "ID": "29627957-d0c4-4f74-91a4-4c7a066ac03a",
+      "ParentID": "f3c4f577-6bcd-49ad-a800-47edf4a610ad",
+      "Body": "[Leave the station]",
+      "column": 30,
+      "row": "1",
+      "color": "hsl(68, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 8635,
+        "fromY": 141,
+        "toX": 8937,
+        "toY": 141
+      }
+    },
+    {
+      "ID": "db0bca77-977e-4a3e-aee5-f1faea6c8c99",
+      "ParentID": "6df7919d-e8d6-44cd-8821-118f43bffb52",
+      "Body": "[Leave the station]",
+      "column": 26,
+      "row": "5",
+      "color": "hsl(134, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 7427,
+        "fromY": 837,
+        "toX": 7729,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "bae33377-7b59-4eba-87e1-e7871951dcd7",
+      "ParentID": "d09099d2-7cac-42d9-8d3f-2daadd873be1",
+      "Body": "[Leave the station]",
+      "column": 28,
+      "row": "3",
+      "color": "hsl(250, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 8031,
+        "fromY": 605,
+        "toX": 8333,
+        "toY": 605
+      }
+    },
+    {
+      "ID": "ad616072-86ff-4ba8-9431-3ab18c759a1e",
+      "ParentID": "d84a77fd-1780-4a51-adcb-f0747202ad05",
+      "Body": "[Check the equipment]",
+      "column": 10,
+      "row": "5",
+      "color": "hsl(101, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 2595,
+        "fromY": 373,
+        "toX": 2897,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "f78f13a2-0777-42f0-a1ce-31d7d724f5bd",
+      "ParentID": "5d8a7dc3-49f2-4c22-a420-48e4c5b7f392",
+      "Body": "[Leave the station]",
+      "column": 10,
+      "row": "6",
+      "color": "hsl(148, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 2595,
+        "fromY": 141,
+        "toX": 2897,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "547f8e29-6b9d-4446-9760-5343ad916929",
+      "ParentID": "ebb48a42-bd87-4cf8-ae75-e67861a01238",
+      "Body": "[Press \"Connect\"]",
+      "column": 12,
+      "row": "7",
+      "color": "hsl(100, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 1069,
+        "toX": 3501,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "3acbdf86-73a9-4b86-847e-7666a00a071b",
+      "ParentID": "ebb48a42-bd87-4cf8-ae75-e67861a01238",
+      "Body": "[Don't pay any attention. Leave the station.]",
+      "column": 12,
+      "row": "8",
+      "color": "hsl(100, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3199,
+        "fromY": 1069,
+        "toX": 3501,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "c120ab66-1ab6-4222-a37c-5ecd84f36924",
+      "ParentID": "bda3db32-560e-45a5-a4b7-20d699111511",
+      "Body": "\"7 PM\"",
+      "column": 14,
+      "row": "10",
+      "color": "hsl(161, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 1533,
+        "toX": 4105,
+        "toY": 2229
+      }
+    },
+    {
+      "ID": "45483123-1cb9-4f3a-82a0-4b323cceb3cb",
+      "ParentID": "bda3db32-560e-45a5-a4b7-20d699111511",
+      "Body": "\"9 PM\"",
+      "column": 14,
+      "row": "11",
+      "color": "hsl(161, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 1533,
+        "toX": 4105,
+        "toY": 2461
+      }
+    },
+    {
+      "ID": "78c67575-8ca4-4761-aeee-5242de9fc65b",
+      "ParentID": "bda3db32-560e-45a5-a4b7-20d699111511",
+      "Body": "\"I don't know\"",
+      "column": 14,
+      "row": "12",
+      "color": "hsl(161, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 3803,
+        "fromY": 1533,
+        "toX": 4105,
+        "toY": 2693
+      }
+    },
+    {
+      "ID": "c1335d3c-68ef-4628-ab89-6002bbf2f9e9",
+      "ParentID": "06b5630e-509e-4fdc-837d-d23fd2eca297",
+      "Body": "[Look around]",
+      "column": 16,
+      "row": "9",
+      "color": "hsl(11, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 2229,
+        "toX": 4709,
+        "toY": 1997
+      }
+    },
+    {
+      "ID": "e49194a2-aa62-4865-8f56-63602581f7a4",
+      "ParentID": "9ea7a2d6-c1fa-4266-8aec-eeca3baa51a1",
+      "Body": "[Leave the station]",
+      "column": 16,
+      "row": "10",
+      "color": "hsl(147, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 2461,
+        "toX": 4709,
+        "toY": 2229
+      }
+    },
+    {
+      "ID": "cc76f1ea-baf6-4e60-9a8a-87c4dba324c8",
+      "ParentID": "36c7e29b-3ddf-494b-89aa-7e4b994ad36c",
+      "Body": "[Leave the station]",
+      "column": 16,
+      "row": "11",
+      "color": "hsl(67, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 2693,
+        "toX": 4709,
+        "toY": 2461
+      }
+    },
+    {
+      "ID": "b48f97a4-c52a-4a04-b443-e303dc9f0530",
+      "ParentID": "06b5630e-509e-4fdc-837d-d23fd2eca297",
+      "Body": "[Leave the station]",
+      "column": 16,
+      "row": "12",
+      "color": "hsl(11, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 4407,
+        "fromY": 2229,
+        "toX": 4709,
+        "toY": 2693
+      }
+    },
+    {
+      "ID": "32952700-0cf4-471e-80ef-8e8107b1ce95",
+      "ParentID": "a72e0ba3-f2b8-47e4-be48-0a670e90b708",
+      "Body": "[Rip the poster]",
+      "column": 18,
+      "row": "8",
+      "color": "hsl(201, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5011,
+        "fromY": 1997,
+        "toX": 5313,
+        "toY": 1765
+      }
+    },
+    {
+      "ID": "b6f97c26-52b0-4ae3-87c9-f5f47674126f",
+      "ParentID": "aa45dde9-15ff-4f00-956a-1ed4cd3de6fc",
+      "Body": "6659510",
+      "column": 20,
+      "row": "4",
+      "color": "hsl(167, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 5615,
+        "fromY": 1765,
+        "toX": 5917,
+        "toY": 837
+      }
+    },
+    {
+      "ID": "46ab6b3b-8477-435b-8b67-a2951deac4b9",
+      "ParentID": "e6c70a98-9673-4cda-89b7-5caeb8c82e25",
+      "Body": "[Read the papers]",
+      "column": 22,
+      "row": "5",
+      "color": "hsl(44, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6219,
+        "fromY": 837,
+        "toX": 6521,
+        "toY": 1069
+      }
+    },
+    {
+      "ID": "ef0e2af4-ad1c-4d1c-9169-ae3dad70554f",
+      "ParentID": "786fd3e3-6948-46ce-be73-1c96dc6f38e2",
+      "Body": "[Cut yourself open]",
+      "column": 24,
+      "row": "6",
+      "color": "hsl(23, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 1069,
+        "toX": 7125,
+        "toY": 1301
+      }
+    },
+    {
+      "ID": "653f42fe-2966-4aa8-a2df-a75d6acc2829",
+      "ParentID": "786fd3e3-6948-46ce-be73-1c96dc6f38e2",
+      "Body": "[Leave the station]",
+      "column": 24,
+      "row": "7",
+      "color": "hsl(23, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 6823,
+        "fromY": 1069,
+        "toX": 7125,
+        "toY": 1533
+      }
+    },
+    {
+      "ID": "9e9556f2-95ed-4908-9998-928b0faf6a2e",
+      "ParentID": "1cb55c04-8914-4625-9206-8343caa6b086",
+      "Body": "[Leave the station]",
+      "column": 26,
+      "row": "6",
+      "color": "hsl(75, 80%, 60%)",
+      "hasCreatedNode": true,
+      "lines": {
+        "fromX": 7427,
+        "fromY": 1301,
+        "toX": 7729,
+        "toY": 1301
+      }
+    }
+  ]
+};
+    let currentNodeID = data.nodes[0].ID;
+
+    const nodes = data.nodes;
+    const subnodes = data.subnodes;
+
+    function getNodeByID(id) {
+      return nodes.find(n => n.ID === id);
+    }
+
+    function getSubnodesForNode(nodeID) {
+      return subnodes.filter(s => s.ParentID === nodeID);
+    }
+
+    function getNextNodeForSubnode(subnodeID) {
+      return nodes.find(n => n.LinkBackID === subnodeID);
+    }
+
+    function displayNode(nodeID, selectedOption = null) {
+      const node = getNodeByID(nodeID);
+      if (!node) return console.error("Node not found:", nodeID);
+
+      const dialogueDiv = document.getElementById('dialogue');
+      const optionsDiv = document.getElementById('options');
+
+      if (selectedOption) {
+        dialogueDiv.innerHTML += '<p class="player-choice">You: ' + selectedOption.Body + '</p>';
+      }
+
+      dialogueDiv.innerHTML += '<p class="dialogue-text">' + node.Body + '</p>';
+      dialogueDiv.scrollTop = dialogueDiv.scrollHeight;
+
+      optionsDiv.innerHTML = '';
+      const options = getSubnodesForNode(node.ID);
+
+      if (options.length === 0) {
+        optionsDiv.innerHTML = '<p>[THE END]</p>';
+        return;
+      }
+
+      options.forEach(option => {
+        const el = document.createElement('div');
+        el.className = 'option';
+        el.textContent = option.Body;
+        el.addEventListener('click', () => {
+          const nextNode = getNextNodeForSubnode(option.ID);
+          if (nextNode) {
+            currentNodeID = nextNode.ID;
+            displayNode(currentNodeID, option);
+          } else {
+            dialogueDiv.innerHTML += '<p class="player-choice">You: ' + option.Body + '</p>';
+            optionsDiv.innerHTML = '<p>[THE END]</p>';
+          }
+        });
+        optionsDiv.appendChild(el);
+      });
+    }
+
+    window.onload = () => displayNode(currentNodeID);
+  </script>
+</body>
+</html>
