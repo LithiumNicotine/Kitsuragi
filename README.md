@@ -36,9 +36,8 @@ Kitsuragi uses a **node-based interface** to make story creation simple and visu
 
 ## 🖼️ Screenshots
 
-![Kitsuragi main menu]([example.png](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%201.png))
-![Kitsuragi Board]([example.png](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%202.png))
-![Game]([example.png](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%203.png))
+![Kitsuragi Board](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%202.png)
+![Game](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%203.png)
 
 ---
 
