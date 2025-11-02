@@ -19,6 +19,8 @@ Grab the latest version here:
 Want to see how Kitsuragi games look in action?  
 Try **The Antarctica Demo**, a short example project showcasing Kitsuragi’s storytelling capabilities.
 
+👾 [**Play**](https://lithiumnicotine.github.io/Kitsuragi/Antartica_-_Demo.html)
+
 ---
 
 ## 📘 Quick Guide
@@ -33,11 +35,12 @@ Kitsuragi uses a **node-based interface** to make story creation simple and visu
 > Kitsuragi focuses on simplicity and accessibility, making it ideal for writers, game designers, or anyone interested in creating narrative experiences without coding.
 
 ---
-
 ## 🖼️ Screenshots
 
-![Kitsuragi Board](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%202.png)
-![Game](https://github.com/LithiumNicotine/Kitsuragi/blob/main/Screenshot%203.png)
+<p float="left">
+  <img src="https://github.com/LithiumNicotine/Kitsuragi/blob/master/Screenshot%202.png" width="920" />
+  <img src="https://github.com/LithiumNicotine/Kitsuragi/blob/master/Screenshot%203.png" width="920" />
+</p>
 
 ---
 
